@@ -1,0 +1,40 @@
+<h1>Cursos</h1>
+<hr>
+<form novalidate [formGroup]="form" (ngSubmit)="create()">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Codigo del curso" formControlName="code">
+        <div *ngIf="f['code'].touched && f['code'].invalid" class="alert alert-danger" role="alert">
+            *El codigo es obligatorio
+        </div>
+        <button class="btn btn-outline-success" type="submit">Guardar</button>
+    </div>
+</form>
+<hr>
+<table class="table table-hover table-light">
+    <thead>
+        <tr>
+            <th>#Id</th>
+            <th>Curso</th>
+            <th>Profesor</th>
+            <th>Salir</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let curso of cursos; index as i">
+            <td>
+                {{ curso.id }}
+            </td>
+            <td>
+                {{ curso.name }}
+            </td>
+            <td>
+                {{ curso.members[0].user.name }}
+            </td>
+            <td>
+                <div class="btn-group">
+                    <button class="btn btn-danger" (click)="delete(curso.id)"> Eliminar </button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

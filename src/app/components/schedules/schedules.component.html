@@ -1,0 +1,191 @@
+<h1>Agenda | <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#create" (click)="form.reset()">Crear nuevo</button></h1>
+<hr>
+<table class="table table-hover table-light">
+    <thead>
+        <tr>
+            <th>#Id</th>
+            <th>Fecha</th>
+            <th>Empieza</th>
+            <th>Termina</th>
+            <th>Salon</th>
+            <th>Curso</th>
+            <th>Codigo de curso</th>
+            <th>Aforo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let agenda of agendas; index as i">
+            <td>
+                {{ agenda.id }}
+            </td>
+            <td>
+                {{ agenda.date }}
+            </td>
+            <td>
+                {{ agenda.start }}
+            </td>
+            <td>
+                {{ agenda.end }}
+            </td>
+            <td>
+                {{ agenda.salon.name }}
+            </td>
+            <td>
+                {{ agenda.curso.name }}
+            </td>
+            <td>
+                {{ agenda.curso.code }}
+            </td>
+            <td>{{ agenda.sub_aforo }} de {{ agenda.salon.aforo }}</td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" (click)="buttonEdit(i)" data-bs-toggle="modal" data-bs-target="#edit">
+              Editar
+            </button>
+                    <button class="btn btn-danger" (click)="delete(agenda.id)"> Eliminar </button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- Modal Editar -->
+<div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form novalidate [formGroup]="form" (ngSubmit)="edit()">
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Fecha</label>
+                                    <input type="date" class="form-control" formControlName="date" id="date" placeholder="Name">
+                                    <div *ngIf="f['date'].touched && f['date'].invalid" class="alert alert-danger" role="alert">
+                                        *La fecha es obligatorio
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label for="start" class="form-label">Hora de incio</label>
+                                        <input type="time" class="form-control" formControlName="start" id="start" placeholder="Name">
+                                    </div>
+                                    <div class="col">
+                                        <label for="end" class="form-label">Hora de finalizacion</label>
+                                        <input type="time" class="form-control" formControlName="end" id="end" placeholder="Name">
+                                    </div>
+                                    <div *ngIf="f['start'].touched && f['start'].invalid" class="alert alert-danger" role="alert">
+                                        *La hora de inicio es obligatoria
+                                    </div>
+                                    <div *ngIf="f['end'].touched && f['end'].invalid" class="alert alert-danger" role="alert">
+                                        *La hora de finalizacion es obligatoria
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <label for="salon_id" class="form-label">Salon</label>
+                                        <select class="form-select" formControlName="salon_id" id="salon_id">
+                                      <option value="{{ salon.id }}" *ngFor="let salon of salones">{{ salon.name }} - Aforo: {{ salon.aforo }}</option>
+                                    </select>
+                                    </div>
+                                    <div class="col">
+                                        <label for="curso_id" class="form-label">Curso</label>
+                                        <select class="form-select" formControlName="curso_id" id="curso_id">
+                                      <option value="{{ curso.id }}" *ngFor="let curso of cursos">{{ curso.name }}</option>
+                                    </select>
+                                    </div>
+                                    <div *ngIf="f['salon_id'].touched && f['salon_id'].invalid" class="alert alert-danger" role="alert">
+                                        *El salon es obligatorio
+                                    </div>
+                                    <div *ngIf="f['curso_id'].touched && f['curso_id'].invalid" class="alert alert-danger" role="alert">
+                                        *El curso es obligatorio
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="cerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary" [disabled]="!form.valid" data-bs-dismiss="modal">Save changes</button>
+                        </div>
+                        <input type="hidden" formControlName="id">
+                        <input type="hidden" formControlName="position">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear -->
+<div class="modal fade" id="create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form novalidate [formGroup]="form" (ngSubmit)="create()">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Fecha</label>
+                            <input type="date" class="form-control" formControlName="date" id="date" placeholder="Name">
+                            <div *ngIf="f['date'].touched && f['date'].invalid" class="alert alert-danger" role="alert">
+                                *La fecha es obligatorio
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="start" class="form-label">Hora de incio</label>
+                                <input type="time" class="form-control" formControlName="start" id="start" placeholder="Name">
+                            </div>
+                            <div class="col">
+                                <label for="end" class="form-label">Hora de finalizacion</label>
+                                <input type="time" class="form-control" formControlName="end" id="end" placeholder="Name">
+                            </div>
+                            <div *ngIf="f['start'].touched && f['start'].invalid" class="alert alert-danger" role="alert">
+                                *La hora de inicio es obligatoria
+                            </div>
+                            <div *ngIf="f['end'].touched && f['end'].invalid" class="alert alert-danger" role="alert">
+                                *La hora de finalizacion es obligatoria
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="salon_id" class="form-label">Salon</label>
+                                <select class="form-select" formControlName="salon_id" id="salon_id">
+                                  <option value="{{ salon.id }}" *ngFor="let salon of salones">{{ salon.name }} - Aforo: {{ salon.aforo }}</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="curso_id" class="form-label">Curso</label>
+                                <select class="form-select" formControlName="curso_id" id="curso_id">
+                                  <option value="{{ curso.id }}" *ngFor="let curso of cursos">{{ curso.name }}</option>
+                                </select>
+                            </div>
+                            <div *ngIf="f['salon_id'].touched && f['salon_id'].invalid" class="alert alert-danger" role="alert">
+                                *El salon es obligatorio
+                            </div>
+                            <div *ngIf="f['curso_id'].touched && f['curso_id'].invalid" class="alert alert-danger" role="alert">
+                                *El curso es obligatorio
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+</script>

@@ -1,0 +1,121 @@
+<h1>Salones | <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#create" (click)="form.reset()">Crear nuevo</button></h1>
+<hr>
+<table class="table table-hover table-light">
+    <thead>
+        <tr>
+            <th>#id</th>
+            <th>Nombre de salon</th>
+            <th>Codigo</th>
+            <th>Aforo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let salon of salons; index as i">
+            <td>
+                {{ salon.id }}
+            </td>
+            <td>
+                {{ salon.name }}
+            </td>
+            <td>
+                {{ salon.code }}
+            </td>
+            <td>
+                {{ salon.aforo }}
+            </td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary" (click)="buttonEdit(i)" data-bs-toggle="modal" data-bs-target="#edit">
+                  Editar
+                </button>
+                    <button class="btn btn-danger" (click)="delete(salon.id)"> Eliminar </button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- Modal Editar -->
+<div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form novalidate [formGroup]="form" (ngSubmit)="edit()">
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" formControlName="name" id="name" placeholder="Name">
+                                    <div *ngIf="f['name'].touched && f['name'].invalid" class="alert alert-danger" role="alert">
+                                        *El nombre es obligatorio
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="aforo" class="form-label">Aforo</label>
+                                    <input type="text" class="form-control" formControlName="aforo" id="aforo" placeholder="Aforo">
+                                    <div *ngIf="f['aforo'].touched && f['aforo'].invalid" class="alert alert-danger" role="alert">
+                                        <span *ngIf="f['aforo'].hasError('required')">*El aforo es obligatorio</span>
+                                        <span *ngIf="f['aforo'].hasError('pattern')">*El aforo debe ser un numero</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="cerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary" [disabled]="!form.valid" data-bs-dismiss="modal">Save changes</button>
+                        </div>
+                        <input type="hidden" formControlName="id">
+                        <input type="hidden" formControlName="position">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear -->
+<div class="modal fade" id="create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form novalidate [formGroup]="form" (ngSubmit)="create()">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" formControlName="name" id="name" placeholder="Name">
+                            <div *ngIf="f['name'].touched && f['name'].invalid" class="alert alert-danger" role="alert">
+                                *El nombre es obligatorio
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="aforo" class="form-label">Aforo</label>
+                            <input type="text" class="form-control" formControlName="aforo" id="aforo" placeholder="Aforo">
+                            <div *ngIf="f['aforo'].touched && f['aforo'].invalid" class="alert alert-danger" role="alert">
+                                <span *ngIf="f['aforo'].hasError('required')">*El aforo es obligatorio</span>
+                                <span *ngIf="f['aforo'].hasError('pattern')">*El aforo debe ser un numero</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" [disabled]="!form.valid" data-bs-dismiss="modal">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+</script>

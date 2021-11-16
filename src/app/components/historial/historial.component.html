@@ -1,0 +1,53 @@
+<h1>Historial</h1>
+<hr>
+<ul class="list-group mb-3" *ngFor="let salon of historial">
+    <li class="list-group-item active">
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th scope="col">{{ salon.id }}</th>
+                    <th scope="col">{{ salon.name }}</th>
+                    <th scope="col">Aforo: {{ salon.aforo }}</th>
+                </tr>
+            </thead>
+        </table>
+    </li>
+    <li class="list-group-item">
+        <table class="table table-hover table-light">
+            <thead>
+                <tr>
+                    <th>#Id</th>
+                    <th>Fecha</th>
+                    <th>Empieza</th>
+                    <th>Termina</th>
+                    <th>Curso</th>
+                    <th>Codigo de curso</th>
+                    <th>Aforo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let agenda of salon.agendas" class="table-{{ agenda.status }}">
+                    <td>
+                        {{ agenda.id }}
+                    </td>
+                    <td>
+                        {{ agenda.date }}
+                    </td>
+                    <td>
+                        {{ agenda.start }}
+                    </td>
+                    <td>
+                        {{ agenda.end }}
+                    </td>
+                    <td>
+                        {{ agenda.curso.name }}
+                    </td>
+                    <td>
+                        {{ agenda.curso.code }}
+                    </td>
+                    <td>{{ agenda.sub_aforo }} de {{ salon.aforo }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+</ul>

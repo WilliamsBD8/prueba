@@ -1,0 +1,196 @@
+<h1>Cursos | <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#create" (click)="form.reset()">Crear nuevo</button></h1>
+<hr>
+
+
+
+<table class="table table-hover table-light">
+    <thead>
+        <tr>
+            <th>#Id</th>
+            <th>Nombre del curso</th>
+            <th>Codigo</th>
+            <th>
+                Profesor
+            </th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let curso of cursos; index as i">
+            <td>
+                {{ curso.id }}
+            </td>
+            <td>
+                {{ curso.name }}
+            </td>
+            <td>
+                {{ curso.code }}
+            </td>
+            <td>
+                {{ curso.members[0].user.name }}
+            </td>
+            <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary" (click)="buttonEdit(i)" data-bs-toggle="modal" data-bs-target="#edit">
+                      Editar
+                    </button>
+                    <button type="button" class="btn btn-outline-success" (click)="viewMembers(i)" data-bs-toggle="modal" data-bs-target="#viewMembers">Ver miembros</button>
+                    <button type="button" class="btn btn-outline-warning" (click)="addMemberM(curso.id)" data-bs-toggle="modal" data-bs-target="#addMembers">Añadir miembros</button>
+                    <button type="button" class="btn btn-outline-danger" (click)="delete(curso.id)"> Eliminar </button>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+<!-- Modal Editar -->
+<div class="modal fade" id="edit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form novalidate [formGroup]="form" (ngSubmit)="edit()">
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="mb-3">
+                                    <label for="name" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" formControlName="name" id="name" placeholder="Name">
+                                    <div *ngIf="f['name'].touched && f['name'].invalid" class="alert alert-danger" role="alert">
+                                        *El nombre es obligatorio
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="teacher" class="form-label">Profesor</label>
+                                    <select id="teacher" formControlName="teacher" class="form-select" aria-label="Default select example">
+                                        <option value="{{ teacher.id }}" *ngFor="let teacher of teachers">{{ teacher.name }}</option>
+                                    </select>
+                                    <div *ngIf="f['teacher'].touched && f['teacher'].invalid" class="alert alert-danger" role="alert">
+                                        *El profesor es obligatorio
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="cerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary" [disabled]="!form.valid" data-bs-dismiss="modal">Save changes</button>
+                        </div>
+                        <input type="hidden" formControlName="id">
+                        <input type="hidden" formControlName="position">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Crear -->
+<div class="modal fade" id="create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Crear</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form novalidate [formGroup]="form" (ngSubmit)="create()">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" formControlName="name" id="name" placeholder="Name">
+                            <div *ngIf="f['name'].touched && f['name'].invalid" class="alert alert-danger" role="alert">
+                                *El nombre es obligatorio
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="teacher" class="form-label">Profesor</label>
+                            <select id="teacher" formControlName="teacher" class="form-select" aria-label="Default select example">
+                                <option value="{{ teacher.id }}" *ngFor="let teacher of teachers">{{ teacher.name }}</option>
+                            </select>
+                            <div *ngIf="f['teacher'].touched && f['teacher'].invalid" class="alert alert-danger" role="alert">
+                                *El profesor es obligatorio
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="!form.valid" data-bs-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Members -->
+<div class="modal fade" id="viewMembers" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Miembros</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let miembro of members; index as i">
+                                <td *ngIf="i > 0">{{ miembro.id }}</td>
+                                <td *ngIf="i > 0">{{ miembro.user.name }}</td>
+                                <td *ngIf="i > 0"><button class="btn btn-danger" (click)="deleteMember(miembro.id)"> Eliminar </button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="cerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Añadir -->
+<div class="modal fade" id="addMembers" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Añadir miembro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form novalidate [formGroup]="formMember" (ngSubmit)="addMember()">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="mb-3">
+                            <label for="user_id" class="form-label">Miembro</label>
+                            <select class="form-select" id="user_id" formControlName="user_id">
+                              <option value="{{ miembro.id }}" *ngFor="let miembro of miembros">{{ miembro.name }}</option>
+                            </select>
+                            <div *ngIf="fm['user_id'].touched && fm['user_id'].invalid" class="alert alert-danger" role="alert">
+                                *El miembro es obligatorio
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cerrar" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="!formMember.valid" data-bs-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+</script>
